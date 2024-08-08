@@ -4,18 +4,13 @@ const createTransactionSchema = celebrate({
     [Segments.BODY]: Joi.object().keys({
         items: Joi.array().items(
             Joi.object({
-                id: Joi.string().required(),     
+                id: Joi.string().required(),
                 quantity: Joi.number().integer().min(1).required()
             })
-        ).min(1).required(), 
-    }).options({ warnings: true })
+        ).required()
+    })
 });
 
-
-module.exports = { 
+module.exports = {
     createTransactionSchema
-
 };
-
-
-
