@@ -42,6 +42,13 @@ exports.getListOfItems = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
+        
+        if (isNaN(page) || isNaN(limit)) {
+            return res.status(400).json({
+                statusCode: 400,
+                message: "Invalid page or limit value. Please provide valid numbers."
+            });
+        }
         const skip = (page - 1) * limit;
         const category = req.query.category;
         const filter = category ? { category } : {};
