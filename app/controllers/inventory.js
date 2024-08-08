@@ -40,7 +40,16 @@ exports.addItem = async (req, res, next) => {
  */
 exports.getListOfItems = async (req, res, next) => {
     try {
-        const inventoryData = await Inventory.find({});
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const skip = (page - 1) * limit;
+
+        
+        const inventoryData = await Inventory.find({})
+            .skip(skip)
+            .limit(limit);
+
+        const totalItems = await Inventory.countDocuments({});
 
         if (!inventoryData.length) {
             return res.status(404).json({
@@ -53,7 +62,12 @@ exports.getListOfItems = async (req, res, next) => {
         return res.status(200).json({
             statusCode: 200,
             message: "Details successfully fetched.",
-            data: inventoryData
+            data: inventoryData,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(totalItems / limit),
+                totalItems: totalItems
+            }
         });
     } catch (error) {
         console.error("Error fetching inventory data:", error);
