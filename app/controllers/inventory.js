@@ -55,7 +55,7 @@ exports.getListOfItems = async (req, res, next) => {
         const category = req.query.category;
         const filter = category ? { category } : {};
         
-        const inventoryData = await Inventory.find(filter)
+        const inventoryData = await Inventory.find(filter,{updatedAt:0,__v:0})
             .skip(skip)
             .limit(limit);
 
