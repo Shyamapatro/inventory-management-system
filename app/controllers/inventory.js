@@ -43,13 +43,14 @@ exports.getListOfItems = async (req, res, next) => {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const skip = (page - 1) * limit;
-
+        const category = req.query.category;
+        const filter = category ? { category } : {};
         
-        const inventoryData = await Inventory.find({})
+        const inventoryData = await Inventory.find(filter)
             .skip(skip)
             .limit(limit);
 
-        const totalItems = await Inventory.countDocuments({});
+        const totalItems = await Inventory.countDocuments(filter);
 
         if (!inventoryData.length) {
             return res.status(404).json({
